@@ -26,6 +26,29 @@
         .label { display: block; font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
         .value { display: block; font-size: 16px; color: #111827; font-weight: bold; }
         .status { text-align: center; margin-top: 30px; padding: 10px; background-color: #d1fae5; color: #047857; font-weight: bold; border-radius: 8px; font-size: 18px; text-transform: uppercase; }
+        
+        /* Ajustes para que el texto del pie de página se vea perfectamente alineado */
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 11px;
+            line-height: 1.6; /* Da un poco de espacio entre las líneas para que no se vea amontonado */
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .footer a {
+            color: #6b7280;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+            display: block; /* Asegura que el texto tome el ancho completo y se centre bien */
+        }
+        .footer a:hover {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -74,6 +97,13 @@
         <div class="status">
             ✓ Documento Válido
         </div>
+
+        <div class="footer">
+            <a href="https://www.gob.mx/inea/" target="_blank" rel="noopener noreferrer">
+                INSTITUTO NACIONAL PARA LA EDUCACIÓN DE LOS ADULTOS, MÉXICO<br>
+                ALGUNOS DERECHOS RESERVADOS © 2026
+            </a>
+        </div>
     </div>
 
     <script>
@@ -88,14 +118,12 @@
             document.getElementById('val-ciudad').textContent = params.get('ciudad') || '';
             document.getElementById('val-folio').textContent = params.get('folio') || '';
 
-            // --- TRADUCTOR INTELIGENTE DE FECHAS (DE LETRAS A NÚMEROS) ---
+            // --- TRADUCTOR INTELIGENTE DE FECHAS ---
             let fechaRaw = params.get('fecha') || '';
             let fechaFormateada = fechaRaw.toUpperCase();
 
-            // Quitamos espacios y acentos para buscar las palabras clave sin que causen error
             let fechaLimpia = fechaFormateada.replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U').replace(/\s+/g, '');
 
-            // Diccionarios de palabras a números
             const diasMap = {
                 'TREINTAYUNO': '31', 'TREINTA': '30', 'VEINTINUEVE': '29', 'VEINTIOCHO': '28', 'VEINTISIETE': '27',
                 'VEINTISEIS': '26', 'VEINTICINCO': '25', 'VEINTICUATRO': '24', 'VEINTITRES': '23', 'VEINTIDOS': '22',
@@ -119,31 +147,27 @@
                 'DOSMILDIECIOCHO': '2018', 'DOSMILDIECISIETE': '2017', 'DOSMILDIECISEIS': '2016'
             };
 
-            // Detectar si la fecha viene escrita en letras largas (Ej: "ALOSNUEVEDIAS...")
             if (fechaLimpia.includes('ALOS') || fechaLimpia.includes('DIAS') || fechaLimpia.includes('DELMES') || fechaLimpia.includes('DOSMIL')) {
                 let diaNum = 'XX';
                 let mesNum = 'XX';
                 let anioNum = 'XXXX';
 
-                // Extraer el DÍA
                 for (let palabra in diasMap) {
                     if (fechaLimpia.includes('LOS' + palabra) || fechaLimpia.includes(palabra + 'DIAS')) {
                         diaNum = diasMap[palabra];
                         break;
                     }
                 }
-                if (diaNum === 'XX') { // Si no lo encuentra, hace una búsqueda general
+                if (diaNum === 'XX') { 
                     for (let palabra in diasMap) {
                         if (fechaLimpia.includes(palabra)) { diaNum = diasMap[palabra]; break; }
                     }
                 }
 
-                // Si el día es "09", le quitamos el "0" inicial para que se vea como "9" (Aplica del 1 al 9)
                 if (diaNum.startsWith('0') && diaNum !== 'XX') {
                     diaNum = diaNum.substring(1);
                 }
 
-                // Extraer el MES
                 for (let palabra in mesesMap) {
                     if (fechaLimpia.includes(palabra)) {
                         mesNum = mesesMap[palabra];
@@ -151,7 +175,6 @@
                     }
                 }
 
-                // Extraer el AÑO
                 for (let palabra in aniosMap) {
                     if (fechaLimpia.includes(palabra)) {
                         anioNum = aniosMap[palabra];
@@ -159,19 +182,17 @@
                     }
                 }
                 
-                // Si el año fue escrito con números (Ej. "DOS MIL 2026"), extrae los números.
                 let numerosEnTexto = fechaLimpia.match(/\d{4}/);
                 if(numerosEnTexto && anioNum === 'XXXX') {
                     anioNum = numerosEnTexto[0];
                 }
 
-                // Armamos el resultado final
                 fechaFormateada = `${diaNum} DE ${mesNum} DE ${anioNum}`;
             } 
             
-            // Reemplazar texto en pantalla
             document.getElementById('val-fecha').textContent = fechaFormateada;
         });
     </script>
 </body>
 </html>
+
