@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Certificado INEA</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px; }
+        .card { max-width: 600px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 15px; margin-bottom: 20px; }
+        h2 { color: #1e1b4b; margin: 0; text-transform: uppercase; font-size: 20px; }
+        .item { margin-bottom: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+        .label { display: block; font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
+        .value { display: block; font-size: 16px; color: #111827; font-weight: bold; }
+        .status { text-align: center; margin-top: 30px; padding: 10px; background-color: #d1fae5; color: #047857; font-weight: bold; border-radius: 8px; font-size: 18px; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h2>Sistema de Validación de Certificados</h2>
+        </div>
+        
+        <div class="item">
+            <span class="label">Nombre del Alumno</span>
+            <span class="value" id="val-nombre"></span>
+        </div>
+        <div class="item">
+            <span class="label">CURP</span>
+            <span class="value" id="val-curp"></span>
+        </div>
+        <div class="item">
+            <span class="label">Institución</span>
+            <span class="value" id="val-inst"></span>
+        </div>
+        <div class="item">
+            <span class="label">Clave de Centro (CCT)</span>
+            <span class="value" id="val-cct"></span>
+        </div>
+        <div class="item">
+            <span class="label">Promedio Final</span>
+            <span class="value"><span id="val-promn"></span> (<span id="val-proml"></span>)</span>
+        </div>
+        <div class="item">
+            <span class="label">Lugar y Fecha de Emisión</span>
+            <span class="value"><span id="val-ciudad"></span>, <span id="val-fecha"></span></span>
+        </div>
+        <div class="item" style="border: none;">
+            <span class="label">Folio del Documento</span>
+            <span class="value" style="color: #dc2626;" id="val-folio"></span>
+        </div>
+
+        <div class="status">
+            ✓ Documento Válido
+        </div>
+    </div>
+
+    <script>
+        // Esta función lee la URL de arriba y extrae los datos que mandó el QR
+        document.addEventListener("DOMContentLoaded", function() {
+            const params = new URLSearchParams(window.location.search);
+            
+            document.getElementById('val-nombre').textContent = params.get('nombre') || '';
+            document.getElementById('val-curp').textContent = params.get('curp') || '';
+            document.getElementById('val-inst').textContent = params.get('inst') || '';
+            document.getElementById('val-cct').textContent = params.get('cct') || '';
+            document.getElementById('val-promn').textContent = params.get('promn') || '';
+            document.getElementById('val-proml').textContent = params.get('proml') || '';
+            document.getElementById('val-ciudad').textContent = params.get('ciudad') || '';
+            document.getElementById('val-fecha').textContent = params.get('fecha') || '';
+            document.getElementById('val-folio').textContent = params.get('folio') || '';
+        });
+    </script>
+</body>
+</html>
