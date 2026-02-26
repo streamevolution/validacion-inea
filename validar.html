@@ -8,6 +8,19 @@
         body { font-family: 'Arial', sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px; }
         .card { max-width: 600px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .header { text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 15px; margin-bottom: 20px; }
+        
+        .header-logos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .header-logos img {
+            max-height: 60px;
+            max-width: 45%;
+            object-fit: contain;
+        }
+
         h2 { color: #1e1b4b; margin: 0; text-transform: uppercase; font-size: 20px; }
         .item { margin-bottom: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
         .label { display: block; font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
@@ -18,6 +31,10 @@
 <body>
     <div class="card">
         <div class="header">
+            <div class="header-logos">
+                <img src="https://i.postimg.cc/hGKvLmJD/1771716790494.png" alt="Logo Izquierdo">
+                <img src="https://i.postimg.cc/52BjQg2L/1771716168716.png" alt="Logo Derecho">
+            </div>
             <h2>Sistema de Validación de Certificados</h2>
         </div>
         
@@ -39,11 +56,15 @@
         </div>
         <div class="item">
             <span class="label">Promedio Final</span>
-            <span class="value"><span id="val-promn"></span> (<span id="val-proml"></span>)</span>
+            <span class="value" id="val-promn"></span>
         </div>
         <div class="item">
-            <span class="label">Lugar y Fecha de Emisión</span>
-            <span class="value"><span id="val-ciudad"></span>, <span id="val-fecha"></span></span>
+            <span class="label">Lugar de Emisión</span>
+            <span class="value" id="val-ciudad"></span>
+        </div>
+        <div class="item">
+            <span class="label">Fecha de Emisión</span>
+            <span class="value" id="val-fecha"></span>
         </div>
         <div class="item" style="border: none;">
             <span class="label">Folio del Documento</span>
@@ -56,7 +77,6 @@
     </div>
 
     <script>
-        // Esta función lee la URL de arriba y extrae los datos que mandó el QR
         document.addEventListener("DOMContentLoaded", function() {
             const params = new URLSearchParams(window.location.search);
             
@@ -65,10 +85,92 @@
             document.getElementById('val-inst').textContent = params.get('inst') || '';
             document.getElementById('val-cct').textContent = params.get('cct') || '';
             document.getElementById('val-promn').textContent = params.get('promn') || '';
-            document.getElementById('val-proml').textContent = params.get('proml') || '';
             document.getElementById('val-ciudad').textContent = params.get('ciudad') || '';
-            document.getElementById('val-fecha').textContent = params.get('fecha') || '';
             document.getElementById('val-folio').textContent = params.get('folio') || '';
+
+            // --- TRADUCTOR INTELIGENTE DE FECHAS (DE LETRAS A NÚMEROS) ---
+            let fechaRaw = params.get('fecha') || '';
+            let fechaFormateada = fechaRaw.toUpperCase();
+
+            // Quitamos espacios y acentos para buscar las palabras clave sin que causen error
+            let fechaLimpia = fechaFormateada.replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U').replace(/\s+/g, '');
+
+            // Diccionarios de palabras a números
+            const diasMap = {
+                'TREINTAYUNO': '31', 'TREINTA': '30', 'VEINTINUEVE': '29', 'VEINTIOCHO': '28', 'VEINTISIETE': '27',
+                'VEINTISEIS': '26', 'VEINTICINCO': '25', 'VEINTICUATRO': '24', 'VEINTITRES': '23', 'VEINTIDOS': '22',
+                'VEINTIUNO': '21', 'VEINTE': '20', 'DIECINUEVE': '19', 'DIECIOCHO': '18', 'DIECISIETE': '17',
+                'DIECISEIS': '16', 'QUINCE': '15', 'CATORCE': '14', 'TRECE': '13', 'DOCE': '12', 'ONCE': '11',
+                'DIEZ': '10', 'NUEVE': '09', 'OCHO': '08', 'SIETE': '07', 'SEIS': '06', 'CINCO': '05',
+                'CUATRO': '04', 'TRES': '03', 'DOS': '02', 'UN': '01', 'UNO': '01'
+            };
+
+            const mesesMap = {
+                'ENERO': '01', 'FEBRERO': '02', 'MARZO': '03', 'ABRIL': '04',
+                'MAYO': '05', 'JUNIO': '06', 'JULIO': '07', 'AGOSTO': '08',
+                'SEPTIEMBRE': '09', 'OCTUBRE': '10', 'NOVIEMBRE': '11', 'DICIEMBRE': '12'
+            };
+
+            const aniosMap = {
+                'DOSMILTREINTA': '2030', 'DOSMILVEINTINUEVE': '2029', 'DOSMILVEINTIOCHO': '2028',
+                'DOSMILVEINTISIETE': '2027', 'DOSMILVEINTISEIS': '2026', 'DOSMILVEINTICINCO': '2025',
+                'DOSMILVEINTICUATRO': '2024', 'DOSMILVEINTITRES': '2023', 'DOSMILVEINTIDOS': '2022',
+                'DOSMILVEINTIUNO': '2021', 'DOSMILVEINTE': '2020', 'DOSMILDIECINUEVE': '2019',
+                'DOSMILDIECIOCHO': '2018', 'DOSMILDIECISIETE': '2017', 'DOSMILDIECISEIS': '2016'
+            };
+
+            // Detectar si la fecha viene escrita en letras largas (Ej: "ALOSNUEVEDIAS...")
+            if (fechaLimpia.includes('ALOS') || fechaLimpia.includes('DIAS') || fechaLimpia.includes('DELMES') || fechaLimpia.includes('DOSMIL')) {
+                let diaNum = 'XX';
+                let mesNum = 'XX';
+                let anioNum = 'XXXX';
+
+                // Extraer el DÍA
+                for (let palabra in diasMap) {
+                    if (fechaLimpia.includes('LOS' + palabra) || fechaLimpia.includes(palabra + 'DIAS')) {
+                        diaNum = diasMap[palabra];
+                        break;
+                    }
+                }
+                if (diaNum === 'XX') { // Si no lo encuentra, hace una búsqueda general
+                    for (let palabra in diasMap) {
+                        if (fechaLimpia.includes(palabra)) { diaNum = diasMap[palabra]; break; }
+                    }
+                }
+
+                // Si el día es "09", le quitamos el "0" inicial para que se vea como "9" (Aplica del 1 al 9)
+                if (diaNum.startsWith('0') && diaNum !== 'XX') {
+                    diaNum = diaNum.substring(1);
+                }
+
+                // Extraer el MES
+                for (let palabra in mesesMap) {
+                    if (fechaLimpia.includes(palabra)) {
+                        mesNum = mesesMap[palabra];
+                        break;
+                    }
+                }
+
+                // Extraer el AÑO
+                for (let palabra in aniosMap) {
+                    if (fechaLimpia.includes(palabra)) {
+                        anioNum = aniosMap[palabra];
+                        break;
+                    }
+                }
+                
+                // Si el año fue escrito con números (Ej. "DOS MIL 2026"), extrae los números.
+                let numerosEnTexto = fechaLimpia.match(/\d{4}/);
+                if(numerosEnTexto && anioNum === 'XXXX') {
+                    anioNum = numerosEnTexto[0];
+                }
+
+                // Armamos el resultado final
+                fechaFormateada = `${diaNum} DE ${mesNum} DE ${anioNum}`;
+            } 
+            
+            // Reemplazar texto en pantalla
+            document.getElementById('val-fecha').textContent = fechaFormateada;
         });
     </script>
 </body>
