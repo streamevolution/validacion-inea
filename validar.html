@@ -27,14 +27,13 @@
         .value { display: block; font-size: 16px; color: #111827; font-weight: bold; }
         .status { text-align: center; margin-top: 30px; padding: 10px; background-color: #d1fae5; color: #047857; font-weight: bold; border-radius: 8px; font-size: 18px; text-transform: uppercase; }
         
-        /* Ajustes para que el texto del pie de página se vea perfectamente alineado */
         .footer {
             text-align: center;
             margin-top: 25px;
             padding-top: 15px;
             border-top: 1px solid #e5e7eb;
             font-size: 11px;
-            line-height: 1.6; /* Da un poco de espacio entre las líneas para que no se vea amontonado */
+            line-height: 1.6;
             padding-left: 10px;
             padding-right: 10px;
         }
@@ -43,7 +42,7 @@
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s ease;
-            display: block; /* Asegura que el texto tome el ancho completo y se centre bien */
+            display: block;
         }
         .footer a:hover {
             color: #4f46e5;
@@ -52,7 +51,7 @@
     </style>
 </head>
 <body>
-    <div class="card">
+    <div class="card" id="certificado-card">
         <div class="header">
             <div class="header-logos">
                 <img src="https://i.postimg.cc/hGKvLmJD/1771716790494.png" alt="Logo Izquierdo">
@@ -95,7 +94,7 @@
         </div>
 
         <div class="status">
-            ✓ Documento Válido
+            ✓ Documento Válido ✓
         </div>
 
         <div class="footer">
@@ -110,6 +109,25 @@
         document.addEventListener("DOMContentLoaded", function() {
             const params = new URLSearchParams(window.location.search);
             
+            // --- NUEVO SISTEMA DE SEGURIDAD ---
+            // Si el enlace no trae datos (parámetros), mostramos la pantalla de error
+            if (!params.toString()) {
+                document.body.style.backgroundColor = "#ffcccc"; // Color de fondo rojo pastel
+                document.body.style.padding = "0";
+                document.body.style.margin = "0";
+                
+                // Reemplazamos todo el contenido por el mensaje de error centrado
+                document.body.innerHTML = `
+                    <div style="display: flex; height: 100vh; width: 100vw; align-items: center; justify-content: center;">
+                        <h1 style="color: #b30000; font-size: 28px; text-align: center; margin: 0; padding: 20px;">
+                            TRÁMITE no encontrado
+                        </h1>
+                    </div>
+                `;
+                return; // Detenemos la ejecución aquí para que no cargue lo demás
+            }
+            // -----------------------------------
+
             document.getElementById('val-nombre').textContent = params.get('nombre') || '';
             document.getElementById('val-curp').textContent = params.get('curp') || '';
             document.getElementById('val-inst').textContent = params.get('inst') || '';
@@ -195,4 +213,3 @@
     </script>
 </body>
 </html>
-
