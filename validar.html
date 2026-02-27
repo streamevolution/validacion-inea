@@ -6,7 +6,8 @@
     <title>Validación de Certificado INEA</title>
     <style>
         body { font-family: 'Arial', sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px; }
-        .card { max-width: 600px; margin: 20px auto; background: #EFEFEF; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                .card { max-width: 600px; margin: 0 auto 20px auto; background: #EFEFEF; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+
         .header { text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 15px; margin-bottom: 20px; }
         
         .header-logos {
@@ -48,6 +49,21 @@
             color: #4f46e5;
             text-decoration: underline;
         }
+        
+                /* Estilos para el nuevo banner centrado en el fondo */
+        .top-banner-container {
+            text-align: center;
+            margin-top: 20px; /* Espacio desde la parte superior del navegador */
+            margin-bottom: 15px; /* Espacio hasta que empieza el rectángulo gris */
+        }
+        .top-banner-container img {
+            max-width: 600px; /* Misma anchura máxima que la tarjeta para alinear bordes */
+            width: 100%; /* Para que sea responsivo en celulares */
+            height: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 
     <script>
@@ -63,6 +79,9 @@
             <div class="header-logos">
                 <img src="https://i.postimg.cc/hGKvLmJD/1771716790494.png" alt="Logo Izquierdo">
                 <img src="https://i.postimg.cc/52BjQg2L/1771716168716.png" alt="Logo Derecho">
+                    <div class="top-banner-container">
+        <img src="https://i.postimg.cc/rwLF9LvX/banner-certificacion-sred-(1).png" alt="Banner Certificación SRED">
+    </div>
             </div>
             <h2>Sistema de Validación de Certificados</h2>
         </div>
