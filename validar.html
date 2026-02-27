@@ -5,11 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Validación de Certificado INEA</title>
     <style>
+        /* Fondo de la pantalla completa */
         body { font-family: 'Arial', sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px; }
-                .card { max-width: 600px; margin: 0 auto 20px auto; background: #EFEFEF; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-
-        .header { text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 15px; margin-bottom: 20px; }
         
+        /* Contenedor del Banner NUEVO (Afuera de la tarjeta) */
+        .banner-exterior {
+            max-width: 600px;
+            margin: 0 auto 15px auto; /* Centrado y con separación de 15px hacia abajo */
+            display: block;
+        }
+        .banner-exterior img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px; /* Pequeño borde redondeado opcional para que se vea mejor */
+        }
+
+        /* La Tarjeta Principal */
+        .card { max-width: 600px; margin: 0 auto 20px auto; background: #EFEFEF; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        .header { text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 15px; margin-bottom: 20px; }
         .header-logos {
             display: flex;
             justify-content: space-between;
@@ -49,21 +64,6 @@
             color: #4f46e5;
             text-decoration: underline;
         }
-        
-                /* Estilos para el nuevo banner centrado en el fondo */
-        .top-banner-container {
-            text-align: center;
-            margin-top: 20px; /* Espacio desde la parte superior del navegador */
-            margin-bottom: 15px; /* Espacio hasta que empieza el rectángulo gris */
-        }
-        .top-banner-container img {
-            max-width: 600px; /* Misma anchura máxima que la tarjeta para alinear bordes */
-            width: 100%; /* Para que sea responsivo en celulares */
-            height: auto;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
     </style>
 
     <script>
@@ -74,14 +74,17 @@
         }
     </script>
 </head>
-<body style="display: none;" id="cuerpoPagina"> <div class="card" id="certificado-card">
+<body style="display: none;" id="cuerpoPagina">
+
+    <div class="banner-exterior">
+        <img src="https://i.postimg.cc/rwLF9LvX/banner-certificacion-sred-(1).png" alt="Banner Certificación SRED">
+    </div>
+
+    <div class="card" id="certificado-card">
         <div class="header">
             <div class="header-logos">
                 <img src="https://i.postimg.cc/hGKvLmJD/1771716790494.png" alt="Logo Izquierdo">
                 <img src="https://i.postimg.cc/52BjQg2L/1771716168716.png" alt="Logo Derecho">
-                    <div class="top-banner-container">
-        <img src="https://i.postimg.cc/rwLF9LvX/banner-certificacion-sred-(1).png" alt="Banner Certificación SRED">
-    </div>
             </div>
             <h2>Sistema de Validación de Certificados</h2>
         </div>
@@ -130,7 +133,6 @@
             </a>
         </div>
     </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const params = new URLSearchParams(window.location.search);
@@ -138,7 +140,6 @@
 
             try {
                 // AQUÍ ESTÁ LA MAGIA: JSON.parse es extremadamente estricto. 
-                // Si eliminan o alteran 1 sola letra del Base64, esto se rompe y salta directo al "catch"
                 const partes = JSON.parse(decodeURIComponent(escape(atob(q))));
 
                 // Validamos que la información esté completa
@@ -233,7 +234,6 @@
                 document.getElementById('cuerpoPagina').style.display = "block";
 
             } catch (error) {
-                // REDIRECCIÓN INMEDIATA: Si falta 1 número o letra, la pantalla nunca se muestra y manda a INEA
                 window.location.replace("https://www.gob.mx/inea/");
             }
         });
