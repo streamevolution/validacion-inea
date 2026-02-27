@@ -49,9 +49,16 @@
             text-decoration: underline;
         }
     </style>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        // Si no detecta el código de seguridad 'q', redirige inmediatamente al INEA
+        if (!params.has('q')) {
+            window.location.replace("https://www.gob.mx/inea/");
+        }
+    </script>
 </head>
-<body>
-    <div class="card" id="certificado-card">
+<body style="display: none;" id="cuerpoPagina"> <div class="card" id="certificado-card">
         <div class="header">
             <div class="header-logos">
                 <img src="https://i.postimg.cc/hGKvLmJD/1771716790494.png" alt="Logo Izquierdo">
@@ -108,107 +115,108 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const params = new URLSearchParams(window.location.search);
-            
-            // --- NUEVO SISTEMA DE SEGURIDAD ---
-            // Si el enlace no trae datos (parámetros), mostramos la pantalla de error
-            if (!params.toString()) {
-                document.body.style.backgroundColor = "#ffcccc"; // Color de fondo rojo pastel
-                document.body.style.padding = "0";
-                document.body.style.margin = "0";
+            const q = params.get('q');
+
+            try {
+                // 1. Decodificar código Base64
+                const datosDecodificados = decodeURIComponent(escape(atob(q)));
                 
-                // Reemplazamos todo el contenido por el mensaje de error centrado
-                document.body.innerHTML = `
-                    <div style="display: flex; height: 100vh; width: 100vw; align-items: center; justify-content: center;">
-                        <h1 style="color: #b30000; font-size: 28px; text-align: center; margin: 0; padding: 20px;">
-                            TRÁMITE no encontrado
-                        </h1>
-                    </div>
-                `;
-                return; // Detenemos la ejecución aquí para que no cargue lo demás
-            }
-            // -----------------------------------
+                // 2. Separar usando la rayita vertical |
+                const partes = datosDecodificados.split('|');
 
-            document.getElementById('val-nombre').textContent = (params.get('nombre') || '').toUpperCase();
-            document.getElementById('val-curp').textContent = (params.get('curp') || '').toUpperCase();
-            document.getElementById('val-inst').textContent = params.get('inst') || '';
-            document.getElementById('val-cct').textContent = params.get('cct') || '';
-            document.getElementById('val-promn').textContent = params.get('promn') || '';
-            document.getElementById('val-ciudad').textContent = (params.get('ciudad') || '').toUpperCase();
-            document.getElementById('val-folio').textContent = params.get('folio') || '';
+                // Si no tiene exactamente 8 partes, significa que alteraron el código
+                if (partes.length !== 8) throw new Error("Código alterado");
 
-            // --- TRADUCTOR INTELIGENTE DE FECHAS ---
-            let fechaRaw = params.get('fecha') || '';
-            let fechaFormateada = fechaRaw.toUpperCase();
+                // 3. Asignar los valores a la página
+                document.getElementById('val-nombre').textContent = (partes[0] || '').toUpperCase();
+                document.getElementById('val-curp').textContent = (partes[1] || '').toUpperCase();
+                document.getElementById('val-inst').textContent = partes[2] || '';
+                document.getElementById('val-cct').textContent = partes[3] || '';
+                document.getElementById('val-promn').textContent = partes[4] || '';
+                document.getElementById('val-ciudad').textContent = (partes[5] || '').toUpperCase();
+                
+                let fechaRaw = partes[6] || '';
+                document.getElementById('val-folio').textContent = partes[7] || '';
 
-            let fechaLimpia = fechaFormateada.replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U').replace(/\s+/g, '');
+                // --- TRADUCTOR INTELIGENTE DE FECHAS (Se mantiene igual) ---
+                let fechaFormateada = fechaRaw.toUpperCase();
+                let fechaLimpia = fechaFormateada.replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U').replace(/\s+/g, '');
 
-            const diasMap = {
-                'TREINTAYUNO': '31', 'TREINTA': '30', 'VEINTINUEVE': '29', 'VEINTIOCHO': '28', 'VEINTISIETE': '27',
-                'VEINTISEIS': '26', 'VEINTICINCO': '25', 'VEINTICUATRO': '24', 'VEINTITRES': '23', 'VEINTIDOS': '22',
-                'VEINTIUNO': '21', 'VEINTE': '20', 'DIECINUEVE': '19', 'DIECIOCHO': '18', 'DIECISIETE': '17',
-                'DIECISEIS': '16', 'QUINCE': '15', 'CATORCE': '14', 'TRECE': '13', 'DOCE': '12', 'ONCE': '11',
-                'DIEZ': '10', 'NUEVE': '09', 'OCHO': '08', 'SIETE': '07', 'SEIS': '06', 'CINCO': '05',
-                'CUATRO': '04', 'TRES': '03', 'DOS': '02', 'UN': '01', 'UNO': '01'
-            };
+                const diasMap = {
+                    'TREINTAYUNO': '31', 'TREINTA': '30', 'VEINTINUEVE': '29', 'VEINTIOCHO': '28', 'VEINTISIETE': '27',
+                    'VEINTISEIS': '26', 'VEINTICINCO': '25', 'VEINTICUATRO': '24', 'VEINTITRES': '23', 'VEINTIDOS': '22',
+                    'VEINTIUNO': '21', 'VEINTE': '20', 'DIECINUEVE': '19', 'DIECIOCHO': '18', 'DIECISIETE': '17',
+                    'DIECISEIS': '16', 'QUINCE': '15', 'CATORCE': '14', 'TRECE': '13', 'DOCE': '12', 'ONCE': '11',
+                    'DIEZ': '10', 'NUEVE': '09', 'OCHO': '08', 'SIETE': '07', 'SEIS': '06', 'CINCO': '05',
+                    'CUATRO': '04', 'TRES': '03', 'DOS': '02', 'UN': '01', 'UNO': '01'
+                };
 
-            const mesesMap = {
-                'ENERO': '01', 'FEBRERO': '02', 'MARZO': '03', 'ABRIL': '04',
-                'MAYO': '05', 'JUNIO': '06', 'JULIO': '07', 'AGOSTO': '08',
-                'SEPTIEMBRE': '09', 'OCTUBRE': '10', 'NOVIEMBRE': '11', 'DICIEMBRE': '12'
-            };
+                const mesesMap = {
+                    'ENERO': '01', 'FEBRERO': '02', 'MARZO': '03', 'ABRIL': '04',
+                    'MAYO': '05', 'JUNIO': '06', 'JULIO': '07', 'AGOSTO': '08',
+                    'SEPTIEMBRE': '09', 'OCTUBRE': '10', 'NOVIEMBRE': '11', 'DICIEMBRE': '12'
+                };
 
-            const aniosMap = {
-                'DOSMILTREINTA': '2030', 'DOSMILVEINTINUEVE': '2029', 'DOSMILVEINTIOCHO': '2028',
-                'DOSMILVEINTISIETE': '2027', 'DOSMILVEINTISEIS': '2026', 'DOSMILVEINTICINCO': '2025',
-                'DOSMILVEINTICUATRO': '2024', 'DOSMILVEINTITRES': '2023', 'DOSMILVEINTIDOS': '2022',
-                'DOSMILVEINTIUNO': '2021', 'DOSMILVEINTE': '2020', 'DOSMILDIECINUEVE': '2019',
-                'DOSMILDIECIOCHO': '2018', 'DOSMILDIECISIETE': '2017', 'DOSMILDIECISEIS': '2016'
-            };
+                const aniosMap = {
+                    'DOSMILTREINTA': '2030', 'DOSMILVEINTINUEVE': '2029', 'DOSMILVEINTIOCHO': '2028',
+                    'DOSMILVEINTISIETE': '2027', 'DOSMILVEINTISEIS': '2026', 'DOSMILVEINTICINCO': '2025',
+                    'DOSMILVEINTICUATRO': '2024', 'DOSMILVEINTITRES': '2023', 'DOSMILVEINTIDOS': '2022',
+                    'DOSMILVEINTIUNO': '2021', 'DOSMILVEINTE': '2020', 'DOSMILDIECINUEVE': '2019',
+                    'DOSMILDIECIOCHO': '2018', 'DOSMILDIECISIETE': '2017', 'DOSMILDIECISEIS': '2016'
+                };
 
-            if (fechaLimpia.includes('ALOS') || fechaLimpia.includes('DIAS') || fechaLimpia.includes('DELMES') || fechaLimpia.includes('DOSMIL')) {
-                let diaNum = 'XX';
-                let mesNum = 'XX';
-                let anioNum = 'XXXX';
+                if (fechaLimpia.includes('ALOS') || fechaLimpia.includes('DIAS') || fechaLimpia.includes('DELMES') || fechaLimpia.includes('DOSMIL')) {
+                    let diaNum = 'XX';
+                    let mesNum = 'XX';
+                    let anioNum = 'XXXX';
 
-                for (let palabra in diasMap) {
-                    if (fechaLimpia.includes('LOS' + palabra) || fechaLimpia.includes(palabra + 'DIAS')) {
-                        diaNum = diasMap[palabra];
-                        break;
-                    }
-                }
-                if (diaNum === 'XX') { 
                     for (let palabra in diasMap) {
-                        if (fechaLimpia.includes(palabra)) { diaNum = diasMap[palabra]; break; }
+                        if (fechaLimpia.includes('LOS' + palabra) || fechaLimpia.includes(palabra + 'DIAS')) {
+                            diaNum = diasMap[palabra];
+                            break;
+                        }
                     }
-                }
-
-                if (diaNum.startsWith('0') && diaNum !== 'XX') {
-                    diaNum = diaNum.substring(1);
-                }
-
-                for (let palabra in mesesMap) {
-                    if (fechaLimpia.includes(palabra)) {
-                        mesNum = mesesMap[palabra];
-                        break;
+                    if (diaNum === 'XX') { 
+                        for (let palabra in diasMap) {
+                            if (fechaLimpia.includes(palabra)) { diaNum = diasMap[palabra]; break; }
+                        }
                     }
-                }
 
-                for (let palabra in aniosMap) {
-                    if (fechaLimpia.includes(palabra)) {
-                        anioNum = aniosMap[palabra];
-                        break;
+                    if (diaNum.startsWith('0') && diaNum !== 'XX') {
+                        diaNum = diaNum.substring(1);
                     }
-                }
+
+                    for (let palabra in mesesMap) {
+                        if (fechaLimpia.includes(palabra)) {
+                            mesNum = mesesMap[palabra];
+                            break;
+                        }
+                    }
+
+                    for (let palabra in aniosMap) {
+                        if (fechaLimpia.includes(palabra)) {
+                            anioNum = aniosMap[palabra];
+                            break;
+                        }
+                    }
+                    
+                    let numerosEnTexto = fechaLimpia.match(/\d{4}/);
+                    if(numerosEnTexto && anioNum === 'XXXX') {
+                        anioNum = numerosEnTexto[0];
+                    }
+
+                    fechaFormateada = `${diaNum} DE ${mesNum} DE ${anioNum}`;
+                } 
                 
-                let numerosEnTexto = fechaLimpia.match(/\d{4}/);
-                if(numerosEnTexto && anioNum === 'XXXX') {
-                    anioNum = numerosEnTexto[0];
-                }
+                document.getElementById('val-fecha').textContent = fechaFormateada;
 
-                fechaFormateada = `${diaNum} DE ${mesNum} DE ${anioNum}`;
-            } 
-            
-            document.getElementById('val-fecha').textContent = fechaFormateada;
+                // 4. Si todo cargó bien, mostramos la pantalla
+                document.getElementById('cuerpoPagina').style.display = "block";
+
+            } catch (error) {
+                // Si alguien intentó adivinar o editar el código y es inválido:
+                window.location.replace("https://www.gob.mx/inea/");
+            }
         });
     </script>
 </body>
