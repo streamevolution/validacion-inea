@@ -52,8 +52,8 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        // Si no detecta el código de seguridad 'q', redirige inmediatamente al INEA
-        if (!params.has('q')) {
+        // Si no detecta la letra 'q' en el link, redirige inmediatamente
+        if (!params.has('q') || !params.get('q')) {
             window.location.replace("https://www.gob.mx/inea/");
         }
     </script>
@@ -118,16 +118,16 @@
             const q = params.get('q');
 
             try {
-                // 1. Decodificar código Base64
-                const datosDecodificados = decodeURIComponent(escape(atob(q)));
-                
-                // 2. Separar usando la rayita vertical |
-                const partes = datosDecodificados.split('|');
+                // AQUÍ ESTÁ LA MAGIA: JSON.parse es extremadamente estricto. 
+                // Si eliminan o alteran 1 sola letra del Base64, esto se rompe y salta directo al "catch"
+                const partes = JSON.parse(decodeURIComponent(escape(atob(q))));
 
-                // Si no tiene exactamente 8 partes, significa que alteraron el código
-                if (partes.length !== 8) throw new Error("Código alterado");
+                // Validamos que la información esté completa
+                if (!Array.isArray(partes) || partes.length < 8) {
+                    throw new Error("Código incompleto");
+                }
 
-                // 3. Asignar los valores a la página
+                // Asignamos los valores si todo fue perfecto
                 document.getElementById('val-nombre').textContent = (partes[0] || '').toUpperCase();
                 document.getElementById('val-curp').textContent = (partes[1] || '').toUpperCase();
                 document.getElementById('val-inst').textContent = partes[2] || '';
@@ -138,7 +138,7 @@
                 let fechaRaw = partes[6] || '';
                 document.getElementById('val-folio').textContent = partes[7] || '';
 
-                // --- TRADUCTOR INTELIGENTE DE FECHAS (Se mantiene igual) ---
+                // --- TRADUCTOR INTELIGENTE DE FECHAS ---
                 let fechaFormateada = fechaRaw.toUpperCase();
                 let fechaLimpia = fechaFormateada.replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U').replace(/\s+/g, '');
 
@@ -210,11 +210,11 @@
                 
                 document.getElementById('val-fecha').textContent = fechaFormateada;
 
-                // 4. Si todo cargó bien, mostramos la pantalla
+                // 4. Si el código no fue alterado, mostramos la pantalla
                 document.getElementById('cuerpoPagina').style.display = "block";
 
             } catch (error) {
-                // Si alguien intentó adivinar o editar el código y es inválido:
+                // REDIRECCIÓN INMEDIATA: Si falta 1 número o letra, la pantalla nunca se muestra y manda a INEA
                 window.location.replace("https://www.gob.mx/inea/");
             }
         });
