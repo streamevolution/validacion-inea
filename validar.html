@@ -1,183 +1,221 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Certificado de Terminación de Estudios</title>
-    
-    <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Certificado INEA</title>
     <style>
-        body { background-color: #ffffff; }
-        .table-responsive { margin-top: 20px; border: none; }
-        .table>tbody>tr>th { background-color: #f9f9f9; width: 35%; font-weight: 600; vertical-align: middle; }
-        .table>tbody>tr>td { vertical-align: middle; }
-        .section-title { background-color: #F2F2F2 !important; font-weight: bold; text-align: left; padding: 12px 10px !important; font-size: 16px; border-bottom: 2px solid #ddd; }
-        .alert-success { background-color: #dff0d8; border-color: #d6e9c6; color: #3c763d; padding: 15px; margin-top: 20px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .page { padding-top: 40px; padding-bottom: 60px; min-height: calc(100vh - 200px); }
-        hr.red { border-top: 2px solid #D0021B; width: 100%; margin-top: 0; }
+        body { font-family: 'Arial', sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px; }
+        .card { max-width: 600px; margin: 20px auto; background: #EFEFEF; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 15px; margin-bottom: 20px; }
+        
+        .header-logos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .header-logos img {
+            max-height: 60px;
+            max-width: 45%;
+            object-fit: contain;
+        }
+
+        h2 { color: #1e1b4b; margin: 0; text-transform: uppercase; font-size: 20px; }
+        .item { margin-bottom: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+        .label { display: block; font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
+        .value { display: block; font-size: 16px; color: #111827; font-weight: bold; }
+        .status { text-align: center; margin-top: 30px; padding: 10px; background-color: #d1fae5; color: #047857; font-weight: bold; border-radius: 8px; font-size: 18px; text-transform: uppercase; }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 11px;
+            line-height: 1.6;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .footer a {
+            color: #6b7280;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+            display: block;
+        }
+        .footer a:hover {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
     </style>
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        // Si no detecta el código cifrado 'q', redirige inmediatamente
-        if (!params.has('q')) {
-            window.location.replace("https://www.gob.mx/sep");
+        // Si no detecta la letra 'q' en el link, redirige inmediatamente
+        if (!params.has('q') || !params.get('q')) {
+            window.location.replace("https://www.gob.mx/inea/");
         }
     </script>
 </head>
-<body id="cuerpoPagina" style="display: none;">
-
-    <nav class="navbar navbar-inverse sub-navbar navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#subenlaces">
-                    <span class="sr-only">Interruptor de Navegación</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="https://www.gob.mx/">
-                    <img src="https://framework-gb.cdn.gob.mx/landing/img/logoheader.svg" width="128" height="37" alt="Página de inicio, Gobierno de México">
-                </a>
+<body style="display: none;" id="cuerpoPagina"> <div class="card" id="certificado-card">
+        <div class="header">
+            <div class="header-logos">
+                <img src="https://i.postimg.cc/hGKvLmJD/1771716790494.png" alt="Logo Izquierdo">
+                <img src="https://i.postimg.cc/52BjQg2L/1771716168716.png" alt="Logo Derecho">
             </div>
-            <div class="collapse navbar-collapse" id="subenlaces">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="https://www.gob.mx/tramites">Trámites</a></li>
-                    <li><a href="https://www.gob.mx/gobierno">Gobierno</a></li>
-                    <li><a href="https://www.gob.mx/busqueda"><span class="sr-only">Búsqueda</span><i class="icon-search"></i></a></li>
-                </ul>
-            </div>
+            <h2>Sistema de Validación de Certificados</h2>
         </div>
-    </nav>
-
-    <main class="page">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <ol class="breadcrumb">
-                        <li><a href="https://www.gob.mx/"><i class="icon-home"></i></a></li>
-                        <li><a href="https://www.gob.mx/sep">SEP</a></li>
-                        <li class="active">Validación de Certificado</li>
-                    </ol>
-                    <h2>Certificado de Terminación de Estudios</h2>
-                    <hr class="red">
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <td colspan="2" class="section-title">Datos del estudiante</td>
-                                </tr>
-                                <tr>
-                                    <th>Nombre y apellidos:</th>
-                                    <td id="valNombre">-</td>
-                                </tr>
-                                <tr>
-                                    <th>Matrícula:</th>
-                                    <td id="valMatricula">-</td>
-                                </tr>
-
-                                <tr>
-                                    <td colspan="2" class="section-title">Datos del plantel o servicio educativo</td>
-                                </tr>
-                                <tr>
-                                    <th>Institución educativa emisora:</th>
-                                    <td>Servicio Nacional de Bachillerato en Línea, "Prepa en Línea-SEP"</td>
-                                </tr>
-                                <tr>
-                                    <th>Plantel o servicio educativo:</th>
-                                    <td>Servicio Nacional de Bachillerato en Línea, "Prepa en Línea-SEP"</td>
-                                </tr>
-                                <tr>
-                                    <th>Clave de Centro de Trabajo:</th>
-                                    <td>09DBH0001D</td>
-                                </tr>
-
-                                <tr>
-                                    <td colspan="2" class="section-title">Trayectoria académica y datos del documento</td>
-                                </tr>
-                                <tr>
-                                    <th>Plan de estudios:</th>
-                                    <td>Bachillerato, con formación básica para el trabajo en <span id="valFormacion" style="text-transform: lowercase;"></span></td>
-                                </tr>
-                                <tr>
-                                    <th>Promedio:</th>
-                                    <td><span id="valPromn">-</span> <span id="valProml" style="text-transform: uppercase;">-</span></td>
-                                </tr>
-                                <tr>
-                                    <th>Créditos obtenidos:</th>
-                                    <td>276 de un total de 276</td>
-                                </tr>
-                                <tr>
-                                    <th>Periodo de estudios:</th>
-                                    <td id="valFecha">-</td>
-                                </tr>
-                                <tr>
-                                    <th>Tipo de documento:</th>
-                                    <td>Certificado de Terminación de Estudios</td>
-                                </tr>
-                                <tr>
-                                    <th>Estatus:</th>
-                                    <td>Registrado en el SIGED</td>
-                                </tr>
-                                <tr>
-                                    <th>Folio:</th>
-                                    <td id="valFolio">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="alert alert-success">
-                        <h4 style="margin: 0; font-weight: bold;">Documento Validado.</h4>
-                    </div>
-                </div>
-            </div>
+        
+        <div class="item">
+            <span class="label">Nombre del Alumno</span>
+            <span class="value" id="val-nombre"></span>
         </div>
-    </main>
+        <div class="item">
+            <span class="label">CURP</span>
+            <span class="value" id="val-curp"></span>
+        </div>
+        <div class="item">
+            <span class="label">Institución</span>
+            <span class="value" id="val-inst"></span>
+        </div>
+        <div class="item">
+            <span class="label">Clave de Centro (CCT)</span>
+            <span class="value" id="val-cct"></span>
+        </div>
+        <div class="item">
+            <span class="label">Promedio Final</span>
+            <span class="value" id="val-promn"></span>
+        </div>
+        <div class="item">
+            <span class="label">Lugar de Emisión</span>
+            <span class="value" id="val-ciudad"></span>
+        </div>
+        <div class="item">
+            <span class="label">Fecha de Emisión</span>
+            <span class="value" id="val-fecha"></span>
+        </div>
+        <div class="item" style="border: none;">
+            <span class="label">Folio del Documento</span>
+            <span class="value" style="color: #dc2626;" id="val-folio"></span>
+        </div>
 
-    <script src="https://framework-gb.cdn.gob.mx/gobmx.js"></script>
+        <div class="status">
+            ✓ Documento Válido ✓
+        </div>
+
+        <div class="footer">
+            <a href="https://www.gob.mx/inea/" target="_blank" rel="noopener noreferrer">
+                INSTITUTO NACIONAL PARA LA EDUCACIÓN DE LOS ADULTOS, MÉXICO<br>
+                ALGUNOS DERECHOS RESERVADOS © 2026
+            </a>
+        </div>
+    </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", function() {
             const params = new URLSearchParams(window.location.search);
             const q = params.get('q');
-            
+
             try {
-                // 1. Decodificar
-                const datosDecodificados = decodeURIComponent(escape(atob(q)));
-                
-                // 2. Separar los datos usando la rayita vertical "|"
-                const partes = datosDecodificados.split('|');
-                
-                // Si no tiene 8 partes, alguien intentó alterar el código
-                if (partes.length !== 8) throw new Error("Código alterado");
+                // AQUÍ ESTÁ LA MAGIA: JSON.parse es extremadamente estricto. 
+                // Si eliminan o alteran 1 sola letra del Base64, esto se rompe y salta directo al "catch"
+                const partes = JSON.parse(decodeURIComponent(escape(atob(q))));
 
-                // 3. Asignar los valores a la página clonada
-                document.getElementById('valNombre').textContent = partes[0] || '-';
-                document.getElementById('valMatricula').textContent = partes[2] || '-'; // La matrícula es la parte 2
-                document.getElementById('valFormacion').textContent = partes[3] || '-';
-                document.getElementById('valPromn').textContent = partes[4] || '-';
-                document.getElementById('valProml').textContent = partes[5] || '-';
-                
-                // Le volvemos a pegar el prefijo al folio
-                document.getElementById('valFolio').textContent = '6e2ecb41-886d-4966-b6b5-' + partes[6];
-                
-                // Asignamos la fecha
-                document.getElementById('valFecha').textContent = partes[7] || '-';
+                // Validamos que la información esté completa
+                if (!Array.isArray(partes) || partes.length < 8) {
+                    throw new Error("Código incompleto");
+                }
 
-                // Mostrar la página solo si la seguridad pasó al 100%
+                // Asignamos los valores si todo fue perfecto
+                document.getElementById('val-nombre').textContent = (partes[0] || '').toUpperCase();
+                document.getElementById('val-curp').textContent = (partes[1] || '').toUpperCase();
+                document.getElementById('val-inst').textContent = partes[2] || '';
+                document.getElementById('val-cct').textContent = partes[3] || '';
+                document.getElementById('val-promn').textContent = partes[4] || '';
+                document.getElementById('val-ciudad').textContent = (partes[5] || '').toUpperCase();
+                
+                let fechaRaw = partes[6] || '';
+                document.getElementById('val-folio').textContent = partes[7] || '';
+
+                // --- TRADUCTOR INTELIGENTE DE FECHAS ---
+                let fechaFormateada = fechaRaw.toUpperCase();
+                let fechaLimpia = fechaFormateada.replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U').replace(/\s+/g, '');
+
+                const diasMap = {
+                    'TREINTAYUNO': '31', 'TREINTA': '30', 'VEINTINUEVE': '29', 'VEINTIOCHO': '28', 'VEINTISIETE': '27',
+                    'VEINTISEIS': '26', 'VEINTICINCO': '25', 'VEINTICUATRO': '24', 'VEINTITRES': '23', 'VEINTIDOS': '22',
+                    'VEINTIUNO': '21', 'VEINTE': '20', 'DIECINUEVE': '19', 'DIECIOCHO': '18', 'DIECISIETE': '17',
+                    'DIECISEIS': '16', 'QUINCE': '15', 'CATORCE': '14', 'TRECE': '13', 'DOCE': '12', 'ONCE': '11',
+                    'DIEZ': '10', 'NUEVE': '09', 'OCHO': '08', 'SIETE': '07', 'SEIS': '06', 'CINCO': '05',
+                    'CUATRO': '04', 'TRES': '03', 'DOS': '02', 'UN': '01', 'UNO': '01'
+                };
+
+                const mesesMap = {
+                    'ENERO': '01', 'FEBRERO': '02', 'MARZO': '03', 'ABRIL': '04',
+                    'MAYO': '05', 'JUNIO': '06', 'JULIO': '07', 'AGOSTO': '08',
+                    'SEPTIEMBRE': '09', 'OCTUBRE': '10', 'NOVIEMBRE': '11', 'DICIEMBRE': '12'
+                };
+
+                const aniosMap = {
+                    'DOSMILTREINTA': '2030', 'DOSMILVEINTINUEVE': '2029', 'DOSMILVEINTIOCHO': '2028',
+                    'DOSMILVEINTISIETE': '2027', 'DOSMILVEINTISEIS': '2026', 'DOSMILVEINTICINCO': '2025',
+                    'DOSMILVEINTICUATRO': '2024', 'DOSMILVEINTITRES': '2023', 'DOSMILVEINTIDOS': '2022',
+                    'DOSMILVEINTIUNO': '2021', 'DOSMILVEINTE': '2020', 'DOSMILDIECINUEVE': '2019',
+                    'DOSMILDIECIOCHO': '2018', 'DOSMILDIECISIETE': '2017', 'DOSMILDIECISEIS': '2016'
+                };
+
+                if (fechaLimpia.includes('ALOS') || fechaLimpia.includes('DIAS') || fechaLimpia.includes('DELMES') || fechaLimpia.includes('DOSMIL')) {
+                    let diaNum = 'XX';
+                    let mesNum = 'XX';
+                    let anioNum = 'XXXX';
+
+                    for (let palabra in diasMap) {
+                        if (fechaLimpia.includes('LOS' + palabra) || fechaLimpia.includes(palabra + 'DIAS')) {
+                            diaNum = diasMap[palabra];
+                            break;
+                        }
+                    }
+                    if (diaNum === 'XX') { 
+                        for (let palabra in diasMap) {
+                            if (fechaLimpia.includes(palabra)) { diaNum = diasMap[palabra]; break; }
+                        }
+                    }
+
+                    if (diaNum.startsWith('0') && diaNum !== 'XX') {
+                        diaNum = diaNum.substring(1);
+                    }
+
+                    for (let palabra in mesesMap) {
+                        if (fechaLimpia.includes(palabra)) {
+                            mesNum = mesesMap[palabra];
+                            break;
+                        }
+                    }
+
+                    for (let palabra in aniosMap) {
+                        if (fechaLimpia.includes(palabra)) {
+                            anioNum = aniosMap[palabra];
+                            break;
+                        }
+                    }
+                    
+                    let numerosEnTexto = fechaLimpia.match(/\d{4}/);
+                    if(numerosEnTexto && anioNum === 'XXXX') {
+                        anioNum = numerosEnTexto[0];
+                    }
+
+                    fechaFormateada = `${diaNum} DE ${mesNum} DE ${anioNum}`;
+                } 
+                
+                document.getElementById('val-fecha').textContent = fechaFormateada;
+
+                // 4. Si el código no fue alterado, mostramos la pantalla
                 document.getElementById('cuerpoPagina').style.display = "block";
 
             } catch (error) {
-                // Redirección en milisegundos si hay anomalías
-                window.location.replace("https://www.gob.mx/sep");
+                // REDIRECCIÓN INMEDIATA: Si falta 1 número o letra, la pantalla nunca se muestra y manda a INEA
+                window.location.replace("https://www.gob.mx/inea/");
             }
         });
     </script>
